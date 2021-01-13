@@ -10,7 +10,7 @@ using TournamentPlanner.Data;
 namespace TournamentPlanner.Migrations
 {
     [DbContext(typeof(TournamentPlannerDbContext))]
-    [Migration("20210105095310_Initial")]
+    [Migration("20210107095050_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,25 +28,30 @@ namespace TournamentPlanner.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("Player1ID")
+                    b.Property<int>("Player1Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Player2ID")
+                    b.Property<int>("Player2Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerID")
                         .HasColumnType("int");
 
                     b.Property<int>("Round")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WinnerID")
+                    b.Property<int?>("WinnerId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("Player1ID");
+                    b.HasIndex("Player1Id");
 
-                    b.HasIndex("Player2ID");
+                    b.HasIndex("Player2Id");
 
-                    b.HasIndex("WinnerID");
+                    b.HasIndex("PlayerID");
+
+                    b.HasIndex("WinnerId");
 
                     b.ToTable("Matches");
                 });
@@ -60,12 +65,10 @@ namespace TournamentPlanner.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -76,19 +79,23 @@ namespace TournamentPlanner.Migrations
                 {
                     b.HasOne("TournamentPlanner.Data.Player", "Player1")
                         .WithMany()
-                        .HasForeignKey("Player1ID")
+                        .HasForeignKey("Player1Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TournamentPlanner.Data.Player", "Player2")
                         .WithMany()
-                        .HasForeignKey("Player2ID")
+                        .HasForeignKey("Player2Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("TournamentPlanner.Data.Player", null)
+                        .WithMany("Matches")
+                        .HasForeignKey("PlayerID");
+
                     b.HasOne("TournamentPlanner.Data.Player", "Winner")
                         .WithMany()
-                        .HasForeignKey("WinnerID")
+                        .HasForeignKey("WinnerId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Player1");
@@ -96,6 +103,11 @@ namespace TournamentPlanner.Migrations
                     b.Navigation("Player2");
 
                     b.Navigation("Winner");
+                });
+
+            modelBuilder.Entity("TournamentPlanner.Data.Player", b =>
+                {
+                    b.Navigation("Matches");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,8 +12,8 @@ namespace TournamentPlanner.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,44 +27,56 @@ namespace TournamentPlanner.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Round = table.Column<int>(type: "int", nullable: false),
-                    Player1ID = table.Column<int>(type: "int", nullable: false),
-                    Player2ID = table.Column<int>(type: "int", nullable: false),
-                    WinnerID = table.Column<int>(type: "int", nullable: true)
+                    Player1Id = table.Column<int>(type: "int", nullable: false),
+                    Player2Id = table.Column<int>(type: "int", nullable: false),
+                    WinnerId = table.Column<int>(type: "int", nullable: true),
+                    PlayerID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Matches", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Matches_Players_Player1ID",
-                        column: x => x.Player1ID,
+                        name: "FK_Matches_Players_Player1Id",
+                        column: x => x.Player1Id,
                         principalTable: "Players",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_Matches_Players_Player2ID",
-                        column: x => x.Player2ID,
+                        name: "FK_Matches_Players_Player2Id",
+                        column: x => x.Player2Id,
                         principalTable: "Players",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_Matches_Players_WinnerID",
-                        column: x => x.WinnerID,
+                        name: "FK_Matches_Players_PlayerID",
+                        column: x => x.PlayerID,
+                        principalTable: "Players",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Matches_Players_WinnerId",
+                        column: x => x.WinnerId,
                         principalTable: "Players",
                         principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_Player1ID",
+                name: "IX_Matches_Player1Id",
                 table: "Matches",
-                column: "Player1ID");
+                column: "Player1Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_Player2ID",
+                name: "IX_Matches_Player2Id",
                 table: "Matches",
-                column: "Player2ID");
+                column: "Player2Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_WinnerID",
+                name: "IX_Matches_PlayerID",
                 table: "Matches",
-                column: "WinnerID");
+                column: "PlayerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Matches_WinnerId",
+                table: "Matches",
+                column: "WinnerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
